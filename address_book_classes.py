@@ -69,3 +69,6 @@ class AddressBook(UserDict):
                     return record
 
         raise ValueError('Record with current value does not found')
+
+
+contacts_dict = AddressBook()
