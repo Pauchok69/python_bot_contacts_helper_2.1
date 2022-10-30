@@ -97,6 +97,15 @@ def del_phone_func(data):
     return f"Phone: {phone} doesn't found for current user"
 
 
+@input_error
+def birthday_func(data):
+    name, birthday_date = data.strip().split(" ")
+    record = contacts_dict[name]
+    record.add_birthday(birthday_date)
+
+    return f'Birthday: {birthday_date} is added for current user'
+
+
 def create_data(data):
     """
     Розділяє вхідні дані на дві частини - номер і телефон.
