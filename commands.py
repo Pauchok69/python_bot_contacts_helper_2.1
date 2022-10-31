@@ -73,8 +73,13 @@ def show_func():
     """
     contacts = ''
 
-    for key, record in contacts_dict.get_all_records().items():
-        contacts += f'{record.get_info()}\n'
+    page_number = 1
+    for page in contacts_dict.iterator():
+        contacts += f'Page #{page_number}\n'
+
+        for record in page:
+            contacts += f'{record.get_info()}\n'
+        page_number += 1
 
     return contacts
 
@@ -126,7 +131,4 @@ def create_data(data):
     if name.isnumeric():
         raise ValueError('Wrong name.')
 
-    for phone in phones:
-        if not phone.isnumeric():
-            raise ValueError('Wrong phone.')
     return name, phones

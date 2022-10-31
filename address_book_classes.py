@@ -4,7 +4,16 @@ from datetime import datetime
 
 class Field:
     def __init__(self, value):
+        self._value = None
         self.value = value
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
 
 
 class Name(Field):
@@ -12,11 +21,23 @@ class Name(Field):
 
 
 class Phone(Field):
-    pass
+    @Field.value.setter
+    def value(self, value):
+        if len(value) < 10 or len(value) > 12:
+            raise ValueError("Phone must contains 10 symbols.")
+        if not value.isnumeric():
+            raise ValueError('Wrong phones.')
+        self._value = value
 
 
 class Birthday(Field):
-    pass
+    @Field.value.setter
+    def value(self, value):
+        today = datetime.now().date()
+        birth_date = datetime.strptime(value, '%Y-%m-%d').date()
+        if birth_date > today:
+            raise ValueError("Birthday must be less than current year and date.")
+        self._value = value
 
 
 class Record:
@@ -102,6 +123,22 @@ class AddressBook(UserDict):
                     return record
 
         raise ValueError('Record with current value does not found')
+
+    def iterator(self, count=5):
+        page = []
+        i = 0
+
+        for record in self.data.values():
+            page.append(record)
+            i += 1
+
+            if i == count:
+                yield page
+                page = []
+                i = 0
+
+        if page:
+            yield page
 
 
 contacts_dict = AddressBook()
