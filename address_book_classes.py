@@ -1,4 +1,5 @@
 from collections import UserDict
+from datetime import datetime
 
 
 class Field:
@@ -48,6 +49,26 @@ class Record:
 
     def add_birthday(self, birthday_date):
         self.birthday = Birthday(birthday_date)
+
+    def get_days_to_next_birthday(self):
+        if not self.birthday:
+            raise ValueError("This contact doesn't have attribute birthday")
+
+        today = datetime.now().date()
+        birthday = datetime.strptime(self.birthday.value, '%Y-%m-%d').date()
+
+        next_birthday_year = today.year
+
+        if today.month >= birthday.month and today.day > birthday.day:
+            next_birthday_year += 1
+
+        next_birthday = datetime(
+            year=next_birthday_year,
+            month=birthday.month,
+            day=birthday.day
+        )
+
+        return (next_birthday.date() - today).days
 
     def change_phones(self, phones):
         for phone in phones:
